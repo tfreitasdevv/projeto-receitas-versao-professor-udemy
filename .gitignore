@@ -120,6 +120,10 @@ ENV/
 env.bak/
 venv.bak/
 
+# Media
+
+media/
+
 # Spyder project settings
 .spyderproject
 .spyproject
