@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_list_or_404
-from utils.recipes.factory import make_recipe
+# from utils.recipes.factory import make_recipe
 from .models import Recipe
 
 
@@ -28,3 +28,7 @@ def recipe(request, id):
         'recipe': recipe,
         'is_detail_page': True,
     })
+
+
+def search(request):
+    return render(request, 'recipes/pages/search.html')
