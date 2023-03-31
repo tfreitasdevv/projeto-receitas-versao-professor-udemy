@@ -8,7 +8,13 @@
 
 <body>
     {% include 'recipes/partials/header.html' %}
-    {% include 'recipes/partials/search.html' %}
+    {% if 'authors' not in request.path %}
+        {% include 'recipes/partials/search.html' %}
+    {% endif %}
+    {% if 'authors' in request.path %}
+        <br>
+    {% endif %}
+    
 
     <main class="main-content-container">
         {% block content %}{% endblock content %}
