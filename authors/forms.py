@@ -2,7 +2,41 @@ from django import forms
 from django.contrib.auth.models import User
 
 
+def add_attr(field, attr_name, new_attr_value):
+    existing_attr = field.widget.attrs.get(attr_name, '')
+    field.widget.attrs[attr_name] = f'{existing_attr} {new_attr_value}'.strip()
+
+
+def add_placeholder(field, placeholder_value):
+    field.widget.attrs['placeholder'] = placeholder_value
+
+
 class RegisterForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        add_attr(self.fields['username'],
+                 'placeholder', 'Placeholder do usuário')
+        add_placeholder(self.fields['email'], 'Ph do email add placeholder')
+
+    password = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Crie sua senha'
+        }),
+        error_messages={
+            'required': 'Este campo é obrigatório'
+        },
+        label='Senha',
+    )
+
+    password2 = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Repita a senha'
+        }),
+        label='Confirmação de senha'
+    )
+
     class Meta:
         model = User
         fields = [
