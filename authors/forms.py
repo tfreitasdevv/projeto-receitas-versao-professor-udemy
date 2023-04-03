@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 
 def add_attr(field, attr_name, new_attr_value):
@@ -71,3 +72,29 @@ class RegisterForm(forms.ModelForm):
                 'placeholder': 'Insira sua senha'
             }),
         }
+
+    # exemplo de validação de um único campo.
+    # o método deve ser sempre clean_nomedocampo
+    def clean_password(self):
+        data = self.cleaned_data.get('password')
+
+        if 'bobo' in data:
+            raise ValidationError(
+                'Não digite "bobo" no campo Senha',
+                code='invalid',
+            )
+
+        return data
+
+    # o método clean permite fazer validações no formulário completo
+    # inclusive verificando campos entre si
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        password2 = cleaned_data.get('password2')
+
+        if password != password2:
+            raise ValidationError({
+                'password2': 'As senhas devem ser iguais',
+                # 'password': 'As senhas devem ser iguais',
+            })
