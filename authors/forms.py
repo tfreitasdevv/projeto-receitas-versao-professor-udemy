@@ -81,9 +81,9 @@ class RegisterForm(forms.ModelForm):
             },
         }
         widgets = {
-            'username': forms.TextInput(attrs={
-                'placeholder': 'Digite aqui seu nome de usuário'
-            }),
+            # 'username': forms.TextInput(attrs={
+            #     'placeholder': 'Digite aqui seu nome de usuário'
+            # }),
             'password': forms.PasswordInput(attrs={
                 'placeholder': 'Insira sua senha'
             }),
