@@ -1,0 +1,33 @@
+<div class="main-content center container">
+    <!--aqui um exemplo de uso de informação da session armazenada como cookie do usuário no navegador-->
+    <h2>Register</h2>
+</div>
+
+{% include 'global/partials/messages.html' %}
+
+<div class="main-content container">
+    <form action="{{ form_action }}" method="POST"> <!-- o método precisa ser POST por se tratar de um formulário -->
+        {% csrf_token %}
+        <div class="form-content form-content-grid">
+            {% for field in form %}
+                <!-- div form-group para tratar campo e label agrupado, como no bootstrap -->
+                <div class="form-group"> 
+                    <!--o campo label precisa de um for. O Django já fornece isso com o .id_for_label-->
+                    <label for="{{ field.id_for_label}}">{{field.label}}</label> 
+                    {{field}}
+                    {% if field.help_text %}
+                        <p class="help-text">{{ field.help_text }}</p>
+                    {% endif %}
+                    <!--lista de erros <ul> que só é exibida se houverem erros naquele campo-->
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+        </div>
+        <!--o botão precisa estar no mesmo form-group para funcionar com o formulário-->
+        <div class="form-content center form-content-grid">
+            <div class="form-group">
+                <button type="submit">Send</button>
+            </div>
+        </div>
+    </form>
+</div>

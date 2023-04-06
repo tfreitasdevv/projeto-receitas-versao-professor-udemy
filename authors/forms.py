@@ -33,6 +33,39 @@ class RegisterForm(forms.ModelForm):
         add_attr(self.fields['username'],
                  'placeholder', 'Placeholder do usuário')
         add_placeholder(self.fields['email'], 'Ph do email add placeholder')
+        add_placeholder(self.fields['first_name'], 'Ex.: João')
+        add_placeholder(self.fields['last_name'], 'Ex.: Silva')
+
+    username = forms.CharField(
+        label='Nome de usuário',
+        help_text='Deve conter entre 4 e 150 caracteres',
+        error_messages={
+            'required': 'Campo obrigatório',
+            'min_length': 'Campo deve ter no mínimo 4 caracteres',
+            'max_length': 'Campo deve ter no máximo 150 caracteres',
+        },
+        min_length=4,
+        max_length=150
+    )
+
+    first_name = forms.CharField(
+        error_messages={'required': 'Escreva seu primeiro nome'},
+        required=True,
+        label='Primeiro Nome',
+    )
+
+    last_name = forms.CharField(
+        error_messages={'required': 'Escreva seu sobrenome'},
+        required=True,
+        label='Sobrenome',
+    )
+
+    email = forms.EmailField(
+        error_messages={'required': 'O e-mail é obrigatório'},
+        required=True,
+        label='E-mail',
+        help_text='O e-mail deve ser válido',
+    )
 
     password = forms.CharField(
         required=True,
@@ -101,6 +134,17 @@ class RegisterForm(forms.ModelForm):
             )
 
         return data
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '')
+        exists = User.objects.filter(email=email).exists()
+
+        if exists:
+            raise ValidationError(
+                'E-mail já cadastrado na base de dados', code='invalid',
+            )
+
+        return email
 
     # o método clean permite fazer validações no formulário completo
     # inclusive verificando campos entre si
