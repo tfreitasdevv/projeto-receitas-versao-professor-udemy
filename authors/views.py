@@ -73,7 +73,7 @@ def login_create(request):
         if authenticated_user is not None:
             messages.success(request, 'Login feito com sucesso.')
             login(request, authenticated_user)
-            return redirect(login_url)
+            return redirect(reverse('authors:dashboard'))
 
         messages.error(request, 'Credenciais inválidas')
         return redirect(login_url)
@@ -92,3 +92,8 @@ def logout_view(request):
 
     logout(request)
     return redirect(reverse('authors:login'))
+
+
+@login_required(login_url='authors:login', redirect_field_name='next')
+def dashboard(request):
+    return render(request, 'authors/pages/dashboard.html')

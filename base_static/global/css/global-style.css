@@ -442,3 +442,7 @@
   .inline-form {
     display: inline;
   }
+
+  .login-message {
+    margin: 1rem 0;
+  }
