@@ -5,12 +5,12 @@
 {% include 'global/partials/messages.html' %}
 
 <div class="main-content container">
-    <form action="{{ form_action }}" method="POST"> <!-- o método precisa ser POST por se tratar de um formulário -->
+    <form action="{{ form_action }}" method="POST" enctype="multipart/form-data"> <!-- o método precisa ser POST por se tratar de um formulário -->
         {% csrf_token %}
         <div class="form-content form-content-grid">
             {% for field in form %}
                 <!-- div form-group para tratar campo e label agrupado, como no bootstrap -->
-                <div class="form-group"> 
+                <div class="form-group {{ field.field.widget.attrs.class }}"> 
                     <!--o campo label precisa de um for. O Django já fornece isso com o .id_for_label-->
                     <label for="{{ field.id_for_label}}">{{field.label}}</label> 
                     {{field}}
@@ -20,6 +20,13 @@
                     <!--lista de erros <ul> que só é exibida se houverem erros naquele campo-->
                     {{ field.errors }}
                 </div>
+
+                {% if field.name == 'cover' and field.value.url %}
+                    <div class="span-2">
+                        <img src="{{ field.value.url }}" alt="Capa para {{ recipe.title }}">
+                    </div>
+                {% endif %}
+
             {% endfor %}
         </div>
         <!--o botão precisa estar no mesmo form-group para funcionar com o formulário-->
