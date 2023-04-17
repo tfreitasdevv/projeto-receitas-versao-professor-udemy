@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from recipes.models import Recipe
 from authors.forms.recipe_form import AuthorRecipeForm
-from authors.forms.recipe_create import RecipeCreateForm
+from authors.forms.recipe_new import RecipeNewForm
 
 # Create your views here.
 
@@ -144,23 +144,28 @@ def dashboard_recipe_edit(request, id):
 
 
 @login_required(login_url='authors:login', redirect_field_name='next')
-def dashboard_recipe_create(request):
+def dashboard_recipe_new(request):
 
     # if not request.POST:
     #     raise Http404()
 
-    form = RecipeCreateForm(request.POST)
+    form = RecipeNewForm(
+        request.POST or None,
+        files=request.FILES or None,
+    )
 
     if form.is_valid():
         recipe = form.save(commit=False)
+
         recipe.author = request.user
         recipe.preparation_steps_is_html = False
         recipe.is_published = False
+
         recipe.save()
 
         messages.success(request, 'Sua receita foi criada com sucesso!')
         return redirect(reverse('authors:dashboard'))
 
-    return render(request, 'authors/pages/dashboard_recipe_create.html', {
+    return render(request, 'authors/pages/dashboard_recipe_new.html', {
         'form': form
     })
