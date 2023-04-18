@@ -169,3 +169,28 @@ def dashboard_recipe_new(request):
     return render(request, 'authors/pages/dashboard_recipe_new.html', {
         'form': form
     })
+
+
+@login_required(login_url='authors:login', redirect_field_name='next')
+def dashboard_recipe_delete(request):
+
+    if not request.POST:
+        raise Http404()
+
+    # aqui se cria a chave register_form_data na session e atribui o post
+    # inteiro a essa chave
+    POST = request.POST
+    id = POST.get('id')
+
+    recipe = Recipe.objects.filter(
+        is_published=False,
+        author=request.user,
+        pk=id,
+    ).first()
+
+    if not recipe:
+        raise Http404()
+
+    recipe.delete()
+    messages.success(request, 'Receita excluída')
+    return redirect(reverse('authors:dashboard'))
