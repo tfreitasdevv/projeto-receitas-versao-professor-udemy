@@ -2,9 +2,9 @@ import os
 
 from django.db.models import Q
 from django.http.response import Http404
-from django.shortcuts import get_object_or_404, render
+# from django.shortcuts import get_object_or_404, render
 from utils.pagination import make_pagination
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from recipes.models import Recipe
 # from django.contrib import messages
@@ -97,6 +97,27 @@ class RecipeListViewSearch(RecipeListViewBase):
 
         return ctx
 
+
+class RecipeDetail(DetailView):
+    model = Recipe
+    context_object_name = 'recipe'
+    template_name = 'recipes/pages/recipe-view.html'
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+        qs = qs.filter(is_published=True)
+        return qs
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super().get_context_data(*args, **kwargs)
+
+        ctx.update({
+            'is_detail_page': True,
+        })
+
+        return ctx
+
+
 # TRECHOS DE FUNCTION BASED VIEWS SUBSTITUÍDOS POR CBV
 
 # def home(request):
@@ -133,13 +154,13 @@ class RecipeListViewSearch(RecipeListViewBase):
 #     })
 
 
-def recipe(request, id):
-    recipe = get_object_or_404(Recipe, pk=id, is_published=True,)
+# def recipe(request, id):
+#     recipe = get_object_or_404(Recipe, pk=id, is_published=True,)
 
-    return render(request, 'recipes/pages/recipe-view.html', context={
-        'recipe': recipe,
-        'is_detail_page': True,
-    })
+#     return render(request, 'recipes/pages/recipe-view.html', context={
+#         'recipe': recipe,
+#         'is_detail_page': True,
+#     })
 
 # TRECHOS DE FUNCTION BASED VIEWS SUBSTITUÍDOS POR CBV
 
